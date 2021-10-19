@@ -1,0 +1,25 @@
+{
+  "name": "pathBuilder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx webpack serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.4",
+    "webpack-cli": "^4.9.1"
+  },
+  "dependencies": {
+    "css-loader": "^6.4.0",
+    "html-webpack-plugin": "^5.4.0",
+    "style-loader": "^3.3.0",
+    "ts-loader": "^9.2.6",
+    "webpack": "^5.59.0",
+    "webpack-dev-server": "^4.3.1"
+  }
+}
