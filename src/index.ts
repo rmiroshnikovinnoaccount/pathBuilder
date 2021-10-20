@@ -39,6 +39,29 @@ const paths: PathType[] = [
     }
 ];
 
+const findDuplicates = (strArr: string[]): string[] => {
+    return strArr.filter((item, index) => strArr.indexOf(item) != index);
+};
+
+const getAllFunctionNames = (arr: PathType[]): string[] => {
+    const strArr: string[] = [];
+
+    arr.forEach(v => {
+        reversePushToArray(v, strArr);
+    });
+
+    return strArr;
+};
+
+const reversePushToArray = (node: PathType, arr: string[]) => {
+    arr.push(node.name);
+    if (node.children) {
+        node.children.forEach(ch => {
+            reversePushToArray(ch, arr);
+        });
+    }
+};
+
 class PathNode {
     path: string;
     name: string;
@@ -86,7 +109,32 @@ class PathTree {
 
 }
 
-const createPath = (initValues: PathType[]) => {
+const isCompareStringArray = (arr1: string[], arr2: string[]): boolean => {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+const createPath = (initValues: PathType[], pathFunctions: object) => {
+    const allFunctionNames = getAllFunctionNames(initValues)
+    .sort();
+    const duplicates = findDuplicates(allFunctionNames);
+    if (duplicates.length > 0) {
+        throw new Error(`Имена функций должны быть уникальны. Совпадения: ${ duplicates }`);
+    }
+    const allPathFunctions = Object.keys(pathFunctions)
+                                   .sort();
+    if (!isCompareStringArray(allPathFunctions, allFunctionNames)) {
+        throw new Error(`pathFunctions не совпадает с именами функций в path: \n\n${ allFunctionNames } \n!== \n${ allPathFunctions }`);
+    }
 
     const tree = new PathTree();
 
@@ -100,8 +148,8 @@ const createPath = (initValues: PathType[]) => {
     parents.forEach(v => {
         reverseCreateFunctions(v, result);
     });
-    console.log(result)
-    return result;
+
+    return result!;
 };
 
 const reverseCreateNode = (value: PathType, tree: PathTree, parent: PathNode | null) => {
@@ -139,7 +187,17 @@ const reverseCreatePath = (node: PathNode, result: { a: string }): string | unde
     }
 };
 
+const pathFunctions = {
+    authAsBot: null,
+    authAsUser: null,
+    migration: null,
+    jwt: null,
+    auth: null,
+    security: null
+};
+
+const createdPath = createPath(paths, pathFunctions);
+
 console.log(
-    createPath(paths)
-    .authAsBot()
+    createdPath
 );
